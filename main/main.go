@@ -2,39 +2,46 @@ package main
 
 import (
 	"fmt"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-type Product struct {
+type Student struct {
+	Name   string
+	Gender bool
+	Age    int
+	//给结构体添加 id(主键)、创建时间、更新时间、删除时间
 	gorm.Model
-	Code  string
-	Price uint
 }
 
 func main() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	//建立数据库连接
+	dsn := "root:ayxqmhy@0411@tcp(127.0.0.1:3306)/ginlearning?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		fmt.Println(err)
 	}
-	//asfdasfsf
-	// 迁移 schema
-	db.AutoMigrate(&Product{})
-	//adasd
-	// Create
-	db.Create(&Product{Code: "D42", Price: 100})
-	fmt.Println("我们不一样")
-	// Read
-	var product Product
-	db.First(&product, 1)                 // 根据整型主键查找
-	db.First(&product, "code = ?", "D42") // 查找 code 字段值为 D42 的记录
 
-	// Update - 将 product 的 price 更新为 200
-	db.Model(&product).Update("Price", 200)
-	// Update - 更新多个字段
-	db.Model(&product).Updates(Product{Price: 200, Code: "F42"}) // 仅更新非零值字段
-	db.Model(&product).Updates(map[string]interface{}{"Price": 200, "Code": "F42"})
+	//自动迁移，可以创建含有 Student 结构体字段表属性的数据库表
+	db.AutoMigrate(&Student{})
+	/*	与已有数据库连接
+			sqlDB, err := sql.Open("mysql", "ginlearning")
+			gormDB, err := gorm.Open(mysql.New(mysql.Config{
+		  		Conn: sqlDB,
+			}), &gorm.Config{})
+	*/
 
-	// Delete - 删除 product
-	db.Delete(&product, 1)
+	//创建数据
+	s1 := Student{
+		Name:   "zzc",
+		Gender: true,
+		Age:    18,
+	}
+
+	//只添加选中的属性名
+	//db.Select("Name", "Gender", "Age").Create(&s1)
+
+	//忽略添加选中的属性名
+	//db.Omit("Age").Create(&s1)
+	db.Create(&s1)
 }
