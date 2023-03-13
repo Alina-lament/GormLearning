@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -16,13 +17,13 @@ func main() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-
+	//asfdasfsf
 	// 迁移 schema
 	db.AutoMigrate(&Product{})
 	//adasd
 	// Create
 	db.Create(&Product{Code: "D42", Price: 100})
-
+	fmt.Println("我们不一样")
 	// Read
 	var product Product
 	db.First(&product, 1)                 // 根据整型主键查找
