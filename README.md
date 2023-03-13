@@ -2,4 +2,4 @@
 踩坑经历
 ---
 ## 1、cgo: C compiler "gcc" not found: exec: "gcc": executable file not found in %PATH%
-解决办法：https://jmeubank.github.io/tdm-gcc/download/ 安装gcc
+解决办法：https://sourceforge.net/projects/mingw-w64/  安装gcc
